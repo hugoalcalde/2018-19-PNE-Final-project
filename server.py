@@ -1,16 +1,12 @@
 """This is the code of the server of the final practice"""
+
+# first we get the information that we are going to need from the browser, working as a client
 import http.server
-import http.client
-import socketserver
 import termcolor
-import json
-
+import socketserver
+import requests
 PORT = 8000 # this is the port used in this practice.
-METHOD = "GET"
-HOSTNAME = "rest.ensembl.org"
-
-headers = {'User-Agent' : 'http-client'}
-
+socketserver.TCPServer.allow_reuse_address = True
 class TestHandler(http.server.BaseHTTPRequestHandler): #this is the class of our server that derives from the protocol
 
     def do_GET(self):
@@ -33,49 +29,103 @@ class TestHandler(http.server.BaseHTTPRequestHandler): #this is the class of our
             content_type = 'text/html'
 
         elif resource == "/listSpecies":
-            ENDPOINT = "/info/species?"
-            conn = http.client.HTTPSConnection(HOSTNAME)
-            conn.request(METHOD, ENDPOINT, None, headers)
 
-            r1 = conn.getresponse()
+            server = "http://rest.ensembl.org"
+            ext = "/info/species?"
 
-            print(r1.status, r1.reason)
-            text_json = r1.read().decode("utf-8")
-            conn.close()
+            r = requests.get(server + ext, headers={"Content-Type": "application/json"})
 
-            info = json.loads(text_json)
-            limit = 50
-            species = ""
-            counter = 0
-            for element in info :
-                species =  "\n" + species + element["name"]
-                counter += 1
+
+            decoded = r.json()
+            species = "" #having a string is more useful when creating the html file in the program
+            counter_species = len(decoded["species"])
+            for element in decoded["species"]:
+                species = species + element["display_name"]
+                species = species + "<br>"
             f = open("limit.html", "w")
             f.write('''<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>LIST OF SPECIES IN THE BROWSER</title>
-</head>
-<body>
-   The number of species is : {}
-   The name of the species is : {}
-</body>
-</html>'''.format(counter, species))
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <title>LIST OF SPECIES IN THE BROWSER</title>
+            </head>
+            <body>
+               The number of species is : {} <br>
+               The names of the species are : {}
+            </body>
+            </html>'''.format(len(decoded["species"]), species))
 
-
+            # Read the file
             f = open("limit.html", 'r')
             code = 200
             # Read the file
             contents = f.read()
-            content_type = 'application/json'
-        else:
-            f = open("error.html", 'r')
-            code = 404
+            content_type = 'text/html'
+        elif resource == "/karyotype" :
+            species_selected = "homo_sapiens" #this is an example, then this should be taken from the index
+            server = "http://rest.ensembl.org"
+            ext = "/info/assembly/"
+
+            r = requests.get(server + ext + species_selected + "?" , headers={"Content-Type": "application/json"})
+
+            decoded = r.json()
+            karyotype = ""
+            for element in decoded["karyotype"] :
+                karyotype = karyotype + "<br>" + element
+            f = open("karyotype.html", "w")
+            f.write('''<!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <title>KARYOTYPE OF A SPECIFIC SPECIES</title>
+                        </head>
+                        <body>
+                           The names of the chromosomes are : {}
+                        </body>
+                        </html>'''.format(karyotype))
+
+            # Read the file
+            f = open("karyotype.html", 'r')
+            code = 200
+            # Read the file
+            contents = f.read()
+            content_type = 'text/html'
+        elif resource == "/chromosomeLength" :
+            chromo = "X" #preguntar si esto es un parámetro que indica el usuario o no y cambiarlo segun el index.html
+            species_selected = "homo_sapiens" #CAMBIAR
+            server = "http://rest.ensembl.org"
+            ext = "/info/assembly/"
+
+            r = requests.get(server + ext + species_selected + "?", headers={"Content-Type": "application/json"})
+
+            decoded = r.json()
+            for element in decoded["top_level_region"] :
+                print(element["name"])
+                if element["name"] == chromo:
+                    length_chromosome = element["length"]
+            f = open("length.html", "w")
+            f.write('''<!DOCTYPE html>
+                                    <html lang="en">
+                                    <head>
+                                        <meta charset="UTF-8">
+                                        <title>LENGTH OF THE SELECTED CHROMOSOME</title>
+                                    </head>
+                                    <body>
+                                       The length of the chromosome is :  {}
+                                    </body>
+                                    </html>'''.format(length_chromosome))
+
+            # Read the file
+            f = open("length.html", 'r')
+            code = 200
             # Read the file
             contents = f.read()
             content_type = 'text/html'
 
+
+
+        else :
+            code = 0
         # Generating the response message
         self.send_response(code)  # -- Status line: OK!
 
@@ -91,11 +141,6 @@ class TestHandler(http.server.BaseHTTPRequestHandler): #this is the class of our
 
         return
 
-
-# ------------------------
-# - Server MAIN program
-# ------------------------
-# -- Set the new handler
 Handler = TestHandler
 
 # -- Open the socket server
@@ -112,5 +157,7 @@ with socketserver.TCPServer(("", PORT), Handler) as httpd:
         print("Stoped by the user")
         httpd.server_close()
 
+
 print("")
 print("Server Stopped")
+
