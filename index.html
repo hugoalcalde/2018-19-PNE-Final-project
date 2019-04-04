@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Welcome!! </title>
+  </head>
+  <body>
+    <h1>Please select one of the options and enter the requested parameters</h1>
+    <form action="listSpecies" method="get">
+
+            <legend>List of species in the genome database</legend>
+                <p>Limit : <input type="number" name="limit" ></p>
+                <p><button type="submit">Send</button></p>
+
+    </form>
+    <form action="karyotype" method="get">
+            <legend>Information about the karyotype : </legend>
+                <p>Select the species :  <input type="text" name="specie"></p>
+                <p><button type="submit">Send</button></p>
+    </form>
+    <form action="chromosomeLength" method="get">
+            <legend>Chromosome Length</legend>
+                <p>Select the species : <input  type="text" name="specie"></p>
+                <p>Select a chromosome : <input  type="text" name="chromo"></p>
+                <p><button type="submit">Send</button></p>
+    </form>
+  </body>
+</html>
