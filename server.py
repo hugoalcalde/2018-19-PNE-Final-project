@@ -30,7 +30,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
 
             content_type = 'text/html'
 
-        elif resource == "/listSpecies":
+        elif resource == "/listSpecies":  # ask for the number of species
 
             server = "http://rest.ensembl.org"
             ext = "/info/species?"
