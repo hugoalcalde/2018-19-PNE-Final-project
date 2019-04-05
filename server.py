@@ -5,7 +5,7 @@ import http.server
 import termcolor
 import socketserver
 import requests
-PORT = 8000 # this is the port used in this practice.
+PORT = 8000  # this is the port used in this practice.
 socketserver.TCPServer.allow_reuse_address = True
 
 
@@ -37,7 +37,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
 
             try:
                 limit = list_resource[1][6:]
-            except IndexError :
+            except IndexError:
                 limit = "none"
 
             r = requests.get(server + ext, headers={"Content-Type": "application/json"})
@@ -48,8 +48,9 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
                 species = species + element["display_name"]
                 species = species + "<br>"
                 counter += 1
-                if str(counter) == limit :
-                    break
+                if str(counter) == limit:
+                    break  # by doing it in this way, the user can enter any limit, if the limit is not correct or
+                    # it is too long, then the server will give back the entire list
             f = open("limit.html", "w")
             f.write('''<!DOCTYPE html>
             <html lang="en">
@@ -69,19 +70,19 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
             # Read the file
             contents = f.read()
             content_type = 'text/html'
-        elif resource == "/karyotype" :
+        elif resource == "/karyotype":
 
             server = "http://rest.ensembl.org"
             ext = "/info/assembly/"
+            try:  # with this try, as well as with the one in the Chromosome length option, we can solve the problem
+                    # user of not entering the compulsory parameters for these options
+                species_selected = list_resource[1][7:]
+                species_selected = species_selected.replace("+", "_").lower()
+                r = requests.get(server + ext + species_selected + "?", headers={"Content-Type": "application/json"})
 
-            species_selected = list_resource[1][7:]
-            species_selected = species_selected.replace("+", "_")
-            r = requests.get(server + ext + species_selected + "?" , headers={"Content-Type": "application/json"})
-
-            decoded = r.json()
-            karyotype = ""
-            try :
-                for element in decoded["karyotype"] :
+                decoded = r.json()
+                karyotype = ""
+                for element in decoded["karyotype"]:
                     karyotype = karyotype + "<br>" + element
                 f = open("karyotype.html", "w")
                 f.write('''<!DOCTYPE html>
@@ -98,53 +99,60 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
                 # Read the file
                 f = open("karyotype.html", 'r')
                 code = 200
-            except KeyError :
+            except KeyError:
                 f = open("error_data.html", "r")
+                code = 200
+            except IndexError:
+                f = open("error_parameters.html", "r")
                 code = 200
             # Read the file
             contents = f.read()
             content_type = 'text/html'
-        elif resource == "/chromosomeLength" :
-            list_options = list_resource[1].split("&")
-            species_selected = list_options[0][7:]
-            species_selected = species_selected.replace("+", "_")
-            chromo = list_options[1][7:]
-            server = "http://rest.ensembl.org"
-            ext = "/info/assembly/"
+        elif resource == "/chromosomeLength":
+            try:
+                list_options = list_resource[1].split("&")
+                species_selected = list_options[0][7:]
+                species_selected = species_selected.replace("+", "_")
+                chromo = list_options[1][7:].upper()
+                server = "http://rest.ensembl.org"
+                ext = "/info/assembly/"
 
-            r = requests.get(server + ext + species_selected + "?", headers={"Content-Type": "application/json"})
+                r = requests.get(server + ext + species_selected + "?", headers={"Content-Type": "application/json"})
 
-            decoded = r.json()
-            length_chromosome = "none"
-            for element in decoded["top_level_region"] :
-                if element["name"] == chromo:
-                    length_chromosome = element["length"]
-            if length_chromosome == "none" :
-                f = open("error_data.html", "r")
-            else :
-                f = open("length.html", "w")
-                f.write('''<!DOCTYPE html>
-                                        <html lang="en">
-                                        <head>
-                                            <meta charset="UTF-8">
-                                            <title>LENGTH OF THE SELECTED CHROMOSOME</title>
-                                        </head>
-                                        <body>
-                                           The length of the chromosome is :  {}
-                                        </body>
-                                        </html>'''.format(length_chromosome))
+                decoded = r.json()
+                length_chromosome = "none"
+                for element in decoded["top_level_region"]:
+                    if element["name"] == chromo:
+                        length_chromosome = element["length"]
+                if length_chromosome == "none":
+                    f = open("error_data.html", "r")
+                else:
+                    f = open("length.html", "w")
+                    f.write('''<!DOCTYPE html>
+                                            <html lang="en">
+                                            <head>
+                                                <meta charset="UTF-8">
+                                                <title>LENGTH OF THE SELECTED CHROMOSOME</title>
+                                            </head>
+                                            <body>
+                                               The length of the chromosome is :  {}
+                                            </body>
+                                            </html>'''.format(length_chromosome))
 
-                # Read the file
-                f = open("length.html", 'r')
+                    # Read the file
+                    f = open("length.html", 'r')
+            except IndexError:
+                f = open("error_parameters.html", "r")
             code = 200
             # Read the file
             contents = f.read()
             content_type = 'text/html'
 
-
-
-        else :
-            code = 0
+        else:
+            f = open("error.html", "r")
+            code = 200
+            contents = f.read()
+            content_type = 'text/html'
         # Generating the response message
         self.send_response(code)  # -- Status line: OK!
 
@@ -160,6 +168,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
 
         return
 
+
 Handler = TestHandler
 
 # -- Open the socket server
@@ -173,12 +182,9 @@ with socketserver.TCPServer(("", PORT), Handler) as httpd:
         httpd.serve_forever()
     except KeyboardInterrupt:
         print("")
-        print("Stoped by the user")
+        print("Stopped by the user")
         httpd.server_close()
 
 
 print("")
 print("Server Stopped")
-
-
-# crear el error.html y el error_data.html
