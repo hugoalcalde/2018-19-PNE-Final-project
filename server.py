@@ -42,11 +42,11 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
 
             r = requests.get(server + ext, headers={"Content-Type": "application/json"})
             decoded = r.json()
-            species = ""  # having a string is more useful when creating the html file in the program
+            species = "<ul>"  # having a string is more useful when creating the html file in the program
             counter = 0
             for element in decoded["species"]:
-                species = species + element["display_name"]
-                species = species + "<br>"
+                species = species + "<li>" +  element["display_name"]
+                species =  species + "</li>"
                 counter += 1
                 if str(counter) == limit:
                     break  # by doing it in this way, the user can enter any limit, if the limit is not correct or
@@ -59,10 +59,11 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
                 <title>LIST OF SPECIES IN THE BROWSER</title>
             </head>
             <body>
-               The number of species is : {} <br>
+               The total number of species in the ensembl is : {} <br>
+               The limit you have selected is : {} <br>
                The names of the species are : {}
             </body>
-            </html>'''.format(len(decoded["species"]), species))
+            </html>'''.format(len(decoded["species"]), limit,  species))
 
             # Read the file
             f = open("limit.html", 'r')
@@ -147,6 +148,92 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
             # Read the file
             contents = f.read()
             content_type = 'text/html'
+        elif resource == "/geneSeq" :
+            try:
+                gene = list_resource[1][5:]
+                server = "http://rest.ensembl.org"
+                ext = "/homology/symbol/human/"
+
+                r = requests.get(server + ext + gene + "?", headers={"Content-Type": "application/json"})
+
+                decoded = r.json()
+
+                gene_id = decoded["data"][0]["id"]
+
+                ext = "/sequence/id/"
+
+                r = requests.get(server + ext + gene_id + "?", headers={"Content-Type": "application/json"})
+
+                decoded = r.json()
+
+                f = open("gene.html", "w")
+                f.write('''<!DOCTYPE html>
+                                                            <html lang="en">
+                                                            <head>
+                                                                <meta charset="UTF-8">
+                                                                <title>SEQUENCE OF THE SELECTED GENE</title>
+                                                            </head>
+                                                            <body>
+                                                               The sequence of the selected gene is :  {}
+                                                            </body>
+                                                            </html>'''.format(decoded["seq"]))
+                f = open("gene.html", 'r')
+
+            except KeyError:
+                f = open("error_data.html", "r")
+            except IndexError:
+                f = open("error_parameters.html", "r")
+            code = 200
+            # Read the file
+            contents = f.read()
+            content_type = 'text/html'
+
+        elif resource == "/geneInfo" :
+            try:
+                gene = list_resource[1][5:]
+                server = "http://rest.ensembl.org"
+                ext = "/homology/symbol/human/"
+
+                r = requests.get(server + ext + gene + "?", headers={"Content-Type": "application/json"})
+
+                decoded = r.json()
+
+                gene_id = decoded["data"][0]["id"]
+
+                ext = "/lookup/id/"
+
+                r = requests.get(server + ext + gene_id + "?", headers={"Content-Type": "application/json"})
+
+                decoded = r.json()
+
+                f = open("info.html", "w")
+                f.write('''<!DOCTYPE html>
+                                                            <html lang="en">
+                                                            <head>
+                                                                <meta charset="UTF-8">
+                                                                <title>INFORMATION ABOUT THE SELECTED GENE</title>
+                                                            </head>
+                                                            <body>
+                                                               The start of the selected gene is :  {} <br>
+                                                               The end of the selected gene is : {} <br>
+                                                               The id of the selected gene is : {} 
+                                                            </body>
+                                                            </html>'''.format(decoded["start"], decoded["end"] , decoded["id"])) #length y chromosome faltan!
+                f = open("info.html", 'r')
+
+            except KeyError:
+                f = open("error_data.html", "r")
+            except IndexError:
+                f = open("error_parameters.html", "r")
+            code = 200
+            # Read the file
+            contents = f.read()
+            content_type = 'text/html'
+
+
+
+
+
 
         else:
             f = open("error.html", "r")

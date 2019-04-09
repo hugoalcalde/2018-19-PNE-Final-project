@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>Welcome!! </title>
   </head>
-  <body>
+  <form>
     <h1>Please select one of the options and enter the requested parameters</h1>
     <form action="listSpecies" method="get">
 
@@ -24,5 +24,16 @@
                 <p>Select a chromosome : <input  type="text" name="chromo"></p>
                 <p><button type="submit">Send</button></p>
     </form>
+          <form action="geneSeq" method="get">
+            <legend>Sequence of a given human gene </legend>
+                <p>Select the gene : <input  type="text" name="gene"></p>
+                <p><button type="submit">Send</button></p>
+    </form>
+          <form action="geneInfo" method="get">
+            <legend>Information of a given human gene  </legend>
+                <p>Select the gene : <input  type="text" name="gene"></p>
+                <p><button type="submit">Send</button></p>
+    </form>
+
   </body>
 </html>
