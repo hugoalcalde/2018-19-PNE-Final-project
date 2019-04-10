@@ -205,7 +205,11 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
                 r = requests.get(server + ext + gene_id + "?", headers={"Content-Type": "application/json"})
 
                 decoded = r.json()
-
+                start = decoded["start"]
+                end = decoded["end"]
+                id = decoded["id"]
+                length = int(end) - int(start) + 1  # the "+1" is because: between 7 and 9 (both included) there are 3
+                                            # numbers. 7-9=2 (2 + 1 = 3)
                 f = open("info.html", "w")
                 f.write('''<!DOCTYPE html>
                                                             <html lang="en">
@@ -216,9 +220,10 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
                                                             <body>
                                                                The start of the selected gene is :  {} <br>
                                                                The end of the selected gene is : {} <br>
-                                                               The id of the selected gene is : {} 
+                                                               The id of the selected gene is : {} <br>
+                                                               The length of the selected gene is : {} 
                                                             </body>
-                                                            </html>'''.format(decoded["start"], decoded["end"] , decoded["id"])) #length y chromosome faltan!
+                                                            </html>'''.format(start, end, id, length)) #length y chromosome faltan!
                 f = open("info.html", 'r')
 
             except KeyError:
