@@ -254,7 +254,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
                 decoded = r.json()
                 seq = Seq(decoded["seq"])
 
-                f = open("gene.html", "w")
+                f = open("gene_calculations.html", "w")
                 f.write('''<!DOCTYPE html>
                                                             <html lang="en">
                                                             <head>
@@ -270,7 +270,46 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
                                                                     * G : {}  <br>
                                                             </body>
                                                             </html>'''.format(seq.len(), seq.perc("A"), seq.perc("C"), seq.perc("T"), seq.perc("G")))
-                f = open("gene.html", 'r')
+                f = open("gene_calculations.html", 'r')
+
+            except KeyError:
+                f = open("error_data.html", "r")
+            except IndexError:
+                f = open("error_parameters.html", "r")
+            code = 200
+            # Read the file
+            contents = f.read()
+            content_type = 'text/html'
+        elif resource == "/geneList":
+            try:
+                list_resource = list_resource[1].split("&")
+                chromo = list_resource[0][7:]
+                start = list_resource[1][6:]
+                end = list_resource[2][4:]
+                server = "http://rest.ensembl.org"
+                ext = "/overlap/region/human/"
+
+                r = requests.get(server + ext + chromo + ":" + start + "-" + end + "?feature=gene;feature=transcript;feature=cds;feature=exon", headers={"Content-Type": "application/json"})
+
+                decoded = r.json()
+                genes_sequence = ""
+                for element in  decoded:
+                    print(element)
+                    genes_sequence = genes_sequence +  element["id"] + "\n"
+
+                f = open("gene_list.html", "w")
+                f.write('''<!DOCTYPE html>
+                                                            <html lang="en">
+                                                            <head>
+                                                                <meta charset="UTF-8">
+                                                                <title>GENES IN THE SELECTED REGION OF THE CHROMOSOME</title>
+                                                            </head>
+                                                            <body>
+                                                               The genes found in the selected region are : <br>
+                                                               {}
+                                                            </body>
+                                                            </html>'''.format(genes_sequence))
+                f = open("gene_list.html", 'r')
 
             except KeyError:
                 f = open("error_data.html", "r")
