@@ -5,6 +5,7 @@ import http.server
 import termcolor
 import socketserver
 import requests
+from seq import Seq
 PORT = 8000  # this is the port used in this practice.
 socketserver.TCPServer.allow_reuse_address = True
 
@@ -223,7 +224,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
                                                                The id of the selected gene is : {} <br>
                                                                The length of the selected gene is : {} 
                                                             </body>
-                                                            </html>'''.format(start, end, id, length)) #length y chromosome faltan!
+                                                            </html>'''.format(start, end, id, length)) #chromosome falta!
                 f = open("info.html", 'r')
 
             except KeyError:
@@ -234,9 +235,51 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
             # Read the file
             contents = f.read()
             content_type = 'text/html'
+        elif resource == "/geneCal":
+            try:
+                gene = list_resource[1][5:]
+                server = "http://rest.ensembl.org"
+                ext = "/homology/symbol/human/"
 
+                r = requests.get(server + ext + gene + "?", headers={"Content-Type": "application/json"})
 
+                decoded = r.json()
 
+                gene_id = decoded["data"][0]["id"]
+
+                ext = "/sequence/id/"
+
+                r = requests.get(server + ext + gene_id + "?", headers={"Content-Type": "application/json"})
+
+                decoded = r.json()
+                seq = Seq(decoded["seq"])
+
+                f = open("gene.html", "w")
+                f.write('''<!DOCTYPE html>
+                                                            <html lang="en">
+                                                            <head>
+                                                                <meta charset="UTF-8">
+                                                                <title>CALCULATIONS OF THE SELECTED GENE</title>
+                                                            </head>
+                                                            <body>
+                                                               The total length is  :  {} <br>
+                                                               The percentage of each base is : <br>
+                                                                    * A : {}  <br>
+                                                                    * C : {}  <br>
+                                                                    * T : {}  <br>
+                                                                    * G : {}  <br>
+                                                            </body>
+                                                            </html>'''.format(seq.len(), seq.perc("A"), seq.perc("C"), seq.perc("T"), seq.perc("G")))
+                f = open("gene.html", 'r')
+
+            except KeyError:
+                f = open("error_data.html", "r")
+            except IndexError:
+                f = open("error_parameters.html", "r")
+            code = 200
+            # Read the file
+            contents = f.read()
+            content_type = 'text/html'
 
 
 
