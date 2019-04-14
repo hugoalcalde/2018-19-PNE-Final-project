@@ -59,6 +59,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
                 <meta charset="UTF-8">
                 <title>LIST OF SPECIES IN THE BROWSER</title>
             </head>
+            <body style="background-color: lightblue;">
             <body>
                The total number of species in the ensembl is : {} <br>
                The limit you have selected is : {} <br>
@@ -93,6 +94,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
                                 <meta charset="UTF-8">
                                 <title>KARYOTYPE OF A SPECIFIC SPECIES</title>
                             </head>
+                            <body style="background-color: lightblue;">
                             <body>
                                The names of the chromosomes are : {}
                             </body>
@@ -136,6 +138,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
                                                 <meta charset="UTF-8">
                                                 <title>LENGTH OF THE SELECTED CHROMOSOME</title>
                                             </head>
+                                            <body style="background-color: lightblue;">
                                             <body>
                                                The length of the chromosome is :  {}
                                             </body>
@@ -174,6 +177,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
                                                                 <meta charset="UTF-8">
                                                                 <title>SEQUENCE OF THE SELECTED GENE</title>
                                                             </head>
+                                                            <body style="background-color: lightblue;">
                                                             <body>
                                                                The sequence of the selected gene is :  {}
                                                             </body>
@@ -218,6 +222,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
                                                                 <meta charset="UTF-8">
                                                                 <title>INFORMATION ABOUT THE SELECTED GENE</title>
                                                             </head>
+                                                            <body style="background-color: lightblue;">
                                                             <body>
                                                                The start of the selected gene is :  {} <br>
                                                                The end of the selected gene is : {} <br>
@@ -261,6 +266,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
                                                                 <meta charset="UTF-8">
                                                                 <title>CALCULATIONS OF THE SELECTED GENE</title>
                                                             </head>
+                                                            <body style="background-color: lightblue;">
                                                             <body>
                                                                The total length is  :  {} <br>
                                                                The percentage of each base is : <br>
@@ -292,10 +298,17 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
                 r = requests.get(server + ext + chromo + ":" + start + "-" + end + "?feature=gene;feature=transcript;feature=cds;feature=exon", headers={"Content-Type": "application/json"})
 
                 decoded = r.json()
-                genes_sequence = ""
+                genes_sequence = "<ul>"
                 for element in  decoded:
-                    print(element)
-                    genes_sequence = genes_sequence +  element["id"] + "\n"
+                    try:
+                        genes_sequence = genes_sequence + "<li>" + element["id"]
+                        genes_sequence = genes_sequence + "</li>"
+                    except TypeError:
+                        genes_sequence = "None"
+                if len(decoded) == 0 :
+                    genes_sequence = "None"
+
+
 
                 f = open("gene_list.html", "w")
                 f.write('''<!DOCTYPE html>
@@ -304,6 +317,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
                                                                 <meta charset="UTF-8">
                                                                 <title>GENES IN THE SELECTED REGION OF THE CHROMOSOME</title>
                                                             </head>
+                                                            <body style="background-color: lightblue;">
                                                             <body>
                                                                The genes found in the selected region are : <br>
                                                                {}

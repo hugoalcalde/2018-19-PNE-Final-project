@@ -4,40 +4,50 @@
     <meta charset="utf-8">
     <title>Welcome!! </title>
   </head>
+  <body style="background-color: lightyellow;">
     <h1>Please select one of the options and enter the requested parameters</h1>
     </form>
     <form action="listSpecies" method="get">
 
-            <legend>List of species in the genome database</legend>
+            <legend>1)List of species in the genome database</legend>
                 <p>Limit : <input type="text" name="limit" ></p>
                 <p><button type="submit">Send</button></p>
 
     </form>
     <form action="karyotype" method="get">
-            <legend>Information about the karyotype : </legend>
+            <legend>2)Information about the karyotype : </legend>
                 <p>Select the species :  <input type="text" name="specie"></p>
                 <p><button type="submit">Send</button></p>
     </form>
     <form action="chromosomeLength" method="get">
-            <legend>Chromosome Length</legend>
+            <legend>3)Chromosome Length</legend>
                 <p>Select the species : <input  type="text" name="specie"></p>
                 <p>Select a chromosome : <input  type="text" name="chromo"></p>
                 <p><button type="submit">Send</button></p>
     </form>
           <form action="geneSeq" method="get">
-            <legend>Sequence of a given human gene </legend>
+            <legend>4)Sequence of a given human gene </legend>
                 <p>Select the gene : <input  type="text" name="gene"></p>
                 <p><button type="submit">Send</button></p>
     </form>
           <form action="geneInfo" method="get">
-            <legend>Information of a given human gene  </legend>
+            <legend>5)Information of a given human gene  </legend>
                 <p>Select the gene : <input  type="text" name="gene"></p>
                 <p><button type="submit">Send</button></p>
     </form>
     <form action="geneCal" method="get">
 
-            <legend>Performing some calculations of a specific gene (sequence)</legend>
+            <legend>6)Performing some calculations of a specific gene (sequence)</legend>
                 <p>Select the gene :  <input type="text" name="gene" ></p>
+                <p><button type="submit">Send</button></p>
+
+    </form>
+  <form action="geneList" method="get">
+
+            <legend>7)List of the different genes found in a specific area of a chromosome </legend>
+                <p>Select the chromosome :  <input type="text" name="chromo" ></p>
+                <p>Select the start :  <input type="text" name="start" ></p>
+                <p>Select the end :  <input type="text" name="end" ></p>
                 <p><button type="submit">Send</button></p>
 
     </form>
