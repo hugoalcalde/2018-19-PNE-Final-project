@@ -213,6 +213,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
                 start = decoded["start"]
                 end = decoded["end"]
                 id = decoded["id"]
+                chromo = decoded["seq_region_name"]
                 length = int(end) - int(start) + 1  # the "+1" is because: between 7 and 9 (both included) there are 3
                                             # numbers. 7-9=2 (2 + 1 = 3)
                 f = open("info.html", "w")
@@ -227,9 +228,11 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
                                                                The start of the selected gene is :  {} <br>
                                                                The end of the selected gene is : {} <br>
                                                                The id of the selected gene is : {} <br>
-                                                               The length of the selected gene is : {} 
+                                                               The length of the selected gene is : {} <br>
+                                                               The chromosome where the gene is located is: {}
+                                                            
                                                             </body>
-                                                            </html>'''.format(start, end, id, length)) #chromosome falta!
+                                                            </html>'''.format(start, end, id, length, chromo))
                 f = open("info.html", 'r')
 
             except KeyError:
@@ -286,25 +289,28 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
             # Read the file
             contents = f.read()
             content_type = 'text/html'
-        elif resource == "/geneList":
+        elif resource == "/geneList": #check if this is correct!!
             try:
                 list_resource = list_resource[1].split("&")
                 chromo = list_resource[0][7:]
                 start = list_resource[1][6:]
                 end = list_resource[2][4:]
+                print(end)
+                print(start)
                 server = "http://rest.ensembl.org"
                 ext = "/overlap/region/human/"
 
                 r = requests.get(server + ext + chromo + ":" + start + "-" + end + "?feature=gene;feature=transcript;feature=cds;feature=exon", headers={"Content-Type": "application/json"})
 
                 decoded = r.json()
+                print(decoded)
                 genes_sequence = "<ul>"
                 for element in  decoded:
-                    try:
-                        genes_sequence = genes_sequence + "<li>" + element["id"]
-                        genes_sequence = genes_sequence + "</li>"
-                    except TypeError:
-                        genes_sequence = "None"
+                    #try:
+                    genes_sequence = genes_sequence + "<li>" + element["id"]
+                    genes_sequence = genes_sequence + "</li>"
+                    #except TypeError:
+                        #genes_sequence = "None"
                 if len(decoded) == 0 :
                     genes_sequence = "None"
 
