@@ -21,7 +21,9 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
 
         # -- Parser the path
         list_resource = self.path.split('?')
+        print(list_resource)
         resource = list_resource[0]
+
 
         if resource == "/":
             f = open("index.html", 'r')
@@ -31,16 +33,22 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
 
             content_type = 'text/html'
 
-        elif resource == "/listSpecies":  # ask for the number of species
+        elif resource == "/listSpecies":
 
             server = "http://rest.ensembl.org"
             ext = "/info/species?"
 
             try:
-                limit = list_resource[1][6:]
+                list_resource = list_resource[1].split("&")
+                print(list_resource)
+                limit = list_resource[0][6:]
             except IndexError:
                 limit = "none"
-
+            json = "No"
+            for element in list_resource:
+                if element.startswith("json"):
+                    json = "yes"
+            print(json)
             r = requests.get(server + ext, headers={"Content-Type": "application/json"})
             decoded = r.json()
             species = "<ul>"  # having a string is more useful when creating the html file in the program
@@ -215,7 +223,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
                 id = decoded["id"]
                 chromo = decoded["seq_region_name"]
                 length = int(end) - int(start) + 1  # the "+1" is because: between 7 and 9 (both included) there are 3
-                                            # numbers. 7-9=2 (2 + 1 = 3)
+                                            # numbers. 9-7=2 (2 + 1 = 3)
                 f = open("info.html", "w")
                 f.write('''<!DOCTYPE html>
                                                             <html lang="en">
@@ -289,7 +297,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
             # Read the file
             contents = f.read()
             content_type = 'text/html'
-        elif resource == "/geneList": #check if this is correct!!
+        elif resource == "/geneList":
             try:
                 list_resource = list_resource[1].split("&")
                 chromo = list_resource[0][7:]
@@ -299,18 +307,20 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
                 print(start)
                 server = "http://rest.ensembl.org"
                 ext = "/overlap/region/human/"
+                hola = start + "-" + end
 
-                r = requests.get(server + ext + chromo + ":" + start + "-" + end + "?feature=gene;feature=transcript;feature=cds;feature=exon", headers={"Content-Type": "application/json"})
+                r = requests.get("http://rest.ensembl.org"+ ext + chromo + ":" + hola + "?feature=gene;feature=transcript;feature=cds;feature=exon;", headers={"Content-Type": "application/json"})
 
                 decoded = r.json()
                 print(decoded)
                 genes_sequence = "<ul>"
-                for element in  decoded:
-                    #try:
-                    genes_sequence = genes_sequence + "<li>" + element["id"]
-                    genes_sequence = genes_sequence + "</li>"
-                    #except TypeError:
-                        #genes_sequence = "None"
+                for element in decoded:
+                    if element["feature_type"] == "gene":
+                        try:
+                            genes_sequence = genes_sequence + "<li>" + element["id"]
+                            genes_sequence = genes_sequence + "</li>"
+                        except TypeError:
+                            genes_sequence = "None"
                 if len(decoded) == 0 :
                     genes_sequence = "None"
 
