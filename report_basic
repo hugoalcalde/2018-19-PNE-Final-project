@@ -1,0 +1,76 @@
+The following cases have been tested for the basic level:
+   * http://localhost:8000/
+     Response: Index HTML file with all the options.
+   * http://localhost:8000/listSpecies?limit=5
+     Response: HTML File with the following content--
+"The total number of species in the ensembl is : 199
+The limit you have selected is : 5
+The names of the species are :
+
+    Mouse
+    Human
+    Guinea Pig
+    Mouse CBA/J
+    Midas cichlid "
+   * http://localhost:8000/listSpecies
+     Response: HTML File with the following content --
+"The total number of species in the ensembl is : 199
+The limit you have selected is : none
+The names of the species are : (list of the 199 species in the ensembl)"
+   * http://localhost:8000/listSpecies?limit=a
+     Response: Same as above, if you enter an incorrect limit the program acts as without a limit.
+   * http://localhost:8000/karyotype?specie=human
+     Response: HTML File with the following content--
+"The names of the chromosomes are :
+1
+2
+3
+4
+5
+6
+... (list of all the chromosomes found in a human)"
+    * http://localhost:8000/karyotype?specie=cat
+      Response: HTML File with the following content--
+"The names of the chromosomes are :
+A1
+A2
+A3
+B1
+B2
+B3
+B4
+C1
+... (list of all the chromosomes found in a cat)"
+    * http://localhost:8000/chromosomeLength?specie=human&chromo=MT
+      Response: HTML file with the following content--
+"The length of the chromosome is : 16569"
+    * http://localhost:8000/chromosomeLength?specie=mouse&chromo=18
+      Response: HTML file with the following content--
+"The length of the chromosome is : 90702639"
+    * http://localhost:8000/karyotype?specie=fddf
+      Response: Data Error HTML file with the following content--
+"ERROR
+
+Welcome to the DATA ERROR server
+
+If you are here is because the data you have entered does not exist in the ensembl
+
+Sorry!!!"
+     * http://localhost:8000/karyot
+       Response: URL Error HTML file with the following content--
+"ERROR
+
+Welcome to the ERROR server
+
+If you are here is because the url that you have entered does not exist
+
+Sorry!!!"
+     * http://localhost:8000/chromosomeLength?&chromo=18
+       Response: Parameter Error HTML file with the following content--
+"ERROR
+
+Welcome to the PARAMETER'S ERROR server
+
+If you are here is because the service you have selected needs some parameter that you did not specify
+
+Sorry!!!"
