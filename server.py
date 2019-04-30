@@ -2,7 +2,6 @@
 
 # first we get the information that we are going to need from the browser, working as a client
 import http.server
-import termcolor
 import socketserver
 import requests
 import json
@@ -23,7 +22,7 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
         in the HTTP protocol request"""
 
         # Print the request line
-        termcolor.cprint(self.requestline, 'green')
+        print(self.requestline, 'green')
 
         # -- Parser the path
         list_resource = self.path.split('?')
@@ -55,6 +54,10 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
                 print(list_resource)
                 limit = list_resource[0][6:]
                 print(limit)
+                try :
+                    int(limit)
+                except ValueError :
+                    limit = "none"
             except IndexError:
                 limit = "none"
             r = requests.get(server + ext, headers={"Content-Type": "application/json"})
@@ -453,6 +456,9 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
                 f = open("error_data.html", "r")
                 content_type = "text/html"
             except IndexError:
+                f = open("error_parameters.html", "r")
+                content_type = "text/html"
+            except TypeError:
                 f = open("error_parameters.html", "r")
                 content_type = "text/html"
             code = 200
