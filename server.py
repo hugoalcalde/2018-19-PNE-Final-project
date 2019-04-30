@@ -215,6 +215,9 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # this is the class of o
             except IndexError:
                 f = open("error_parameters.html", "r")
                 content_type = "text/html"
+            except KeyError:
+                f = open("error_parameters.html" , "r")
+                content_type = "text/html"
             code = 200
             # Read the file
             contents = f.read()
