@@ -1,76 +1,199 @@
 The following cases have been tested for the basic level:
    * http://localhost:8000/
-     Response: Index HTML file with all the options.
+
+    "<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Welcome!! </title>
+  </head>
+  <body style="background-color: lightyellow;">
+    <h1>Please select one of the options and enter the requested parameters</h1>
+    </form>
+    <form action="listSpecies" method="get">
+
+            <legend>1)List of species in the genome database</legend>
+                <p>Limit : <input type="text" name="limit" ></p>
+                <p><button type="submit">Send</button></p>
+
+    </form>
+    <form action="karyotype" method="get">
+            <legend>2)Information about the karyotype : </legend>
+                <p>Select the species :  <input type="text" name="specie"></p>
+                <p><button type="submit">Send</button></p>
+    </form>
+    <form action="chromosomeLength" method="get">
+            <legend>3)Chromosome Length</legend>
+                <p>Select the species : <input  type="text" name="specie"></p>
+                <p>Select a chromosome : <input  type="text" name="chromo"></p>
+                <p><button type="submit">Send</button></p>
+    </form>
+          <form action="geneSeq" method="get">
+            <legend>4)Sequence of a given human gene </legend>
+                <p>Select the gene : <input  type="text" name="gene"></p>
+                <p><button type="submit">Send</button></p>
+    </form>
+          <form action="geneInfo" method="get">
+            <legend>5)Information of a given human gene  </legend>
+                <p>Select the gene : <input  type="text" name="gene"></p>
+                <p><button type="submit">Send</button></p>
+    </form>
+    <form action="geneCalc" method="get">
+
+            <legend>6)Performing some calculations of a specific gene (sequence)</legend>
+                <p>Select the gene :  <input type="text" name="gene" ></p>
+                <p><button type="submit">Send</button></p>
+
+    </form>
+  <form action="geneList" method="get">
+
+            <legend>7)List of the different genes found in a specific area of a chromosome </legend>
+                <p>Select the chromosome :  <input type="text" name="chromo" ></p>
+                <p>Select the start :  <input type="text" name="start" ></p>
+                <p>Select the end :  <input type="text" name="end" ></p>
+                <p><button type="submit">Send</button></p>
+
+    </form>
+
+  </body>
+</html>"
+
    * http://localhost:8000/listSpecies?limit=5
-     Response: HTML File with the following content--
-"The total number of species in the ensembl is : 199
-The limit you have selected is : 5
-The names of the species are :
 
-    Mouse
-    Human
-    Guinea Pig
-    Mouse CBA/J
-    Midas cichlid "
+ "<!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>LIST OF SPECIES IN THE BROWSER</title>
+                </head>
+                <body style="background-color: lightblue;">
+                <body>
+                   The total number of species in the ensembl is : 199 <br>
+                   The limit you have selected is : 5 <br>
+                   The names of the species are : <ul><li>Flycatcher</li><li>American beaver</li><li>C.intestinalis</li><li>Central bearded dragon</li><li>Golden-collared manakin</li>
+                </body>
+                </html>"
+
    * http://localhost:8000/listSpecies
-     Response: HTML File with the following content --
-"The total number of species in the ensembl is : 199
-The limit you have selected is : none
-The names of the species are : (list of the 199 species in the ensembl)"
+
+"<!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>LIST OF SPECIES IN THE BROWSER</title>
+                </head>
+                <body style="background-color: lightblue;">
+                <body>
+                   The total number of species in the ensembl is : 199 <br>
+                   The limit you have selected is : none <br>
+                   The names of the species are : <ul><li>Flycatcher</li><li>American beaver</li><li>C.intestinalis</li><li>Central bearded dragon</li><li>Golden-collared manakin</li><li>Steppe mouse</li><li>White-throated sparrow</li><li>Kangaroo rat</li><li>Gibbon</li><li>Mouse FVB/NJ</li><li>Mummichog</li><li>Algerian mouse</li><li>Guppy</li><li>Clown anemonefish</li><li>Mongolian gerbil</li><li>Saccharomyces cerevisiae</li><li>Paramormyrops kingsleyae</li><li>Lesser Egyptian jerboa</li><li>Mouse C3H/HeJ</li><li>Orange clownfish</li><li>Hedgehog</li><li>Koala</li><li>Spiny chromis</li><li>Blue-crowned manakin</li><li>American mink</li><li>Guinea Pig</li><li>Horse</li><li>Armadillo</li><li>Burton's mouthbrooder</li><li>Crab-eating macaque</li><li>Japanese quail</li><li>Budgerigar</li><li>Naked mole-rat male</li><li>Ma's night monkey</li><li>Polar bear</li><li>Greater bamboo lemur</li><li>Sailfin molly</li><li>Mangrove rivulus</li><li>Great spotted kiwi</li><li>Argentine black and white tegu</li><li>Coquerel's sifaka</li><li>Donkey</li><li>Brazilian guinea pig</li><li>Duck</li><li>Zebrafish</li><li>Northern American deer mouse</li><li>Common canary</li><li>Golden Hamster</li><li>Channel catfish</li><li>Western mosquitofish</li><li>Swamp eel</li><li>Bengalese finch</li><li>Cat</li><li>Platypus</li><li>Little spotted kiwi</li><li>Tuatara</li><li>Shortfin molly</li><li>Drosophila melanogaster</li><li>Tasmanian devil</li><li>Zebra mbuna</li><li>Mouse WSB/EiJ</li><li>Ballan wrasse</li><li>Great Tit</li><li>Helmeted guineafowl</li><li>Lamprey</li><li>Spotted gar</li><li>Monterrey platyfish</li><li>Upper Galilee mountains blind mole rat</li><li>Pika</li><li>Sloth</li><li>Chimpanzee</li><li>Bolivian squirrel monkey</li><li>Ferret</li><li>Agassiz's desert tortoise</li><li>Arctic ground squirrel</li><li>Mouse PWK/PhJ</li><li>Japanese medaka HdrR</li><li>Megabat</li><li>Abingdon island giant tortoise</li><li>Black snub-nosed monkey</li><li>Mexican tetra</li><li>Lyretail cichlid</li><li>Mouse CAST/EiJ</li><li>Lesser hedgehog tenrec</li><li>Zebra Finch</li><li>Elephant</li><li>Capuchin</li><li>Anole lizard</li><li>Panda</li><li>Daurian ground squirrel</li><li>Pig</li><li>Mouse</li><li>Mouse NZO/HlLtJ</li><li>Spoon-billed sandpiper</li><li>Wallaby</li><li>Tiger tail seahorse</li><li>Cow</li><li>American bison</li><li>Mouse A/J</li><li>Japanese medaka HSOK</li><li>Bonobo</li><li>Gorilla</li><li>Emu</li><li>Okarito brown kiwi</li><li>Dog</li><li>Chilean tinamou</li><li>Sheepshead minnow</li><li>Chinese hamster PICR</li><li>Alpaca</li><li>Blue tit</li><li>Zig-zag eel</li><li>Pig-tailed macaque</li><li>Ryukyu mouse</li><li>Angola colobus</li><li>Sheep</li><li>Drill</li><li>Eastern happy</li><li>Japanese medaka HNI</li><li>Cod</li><li>Hagfish</li><li>Tarsier</li><li>Indian medaka</li><li>Sooty mangabey</li><li>Stickleback</li><li>Amazon molly</li><li>Mouse DBA/2J</li><li>Mouse C57BL/6NJ</li><li>Dark-eyed junco</li><li>Chinese hamster CHOK1GS</li><li>Xenopus</li><li>Dingo</li><li>Dolphin</li><li>Ugandan red Colobus</li><li>Red-bellied piranha</li><li>Mouse Lemur</li><li>Midas cichlid</li><li>Caenorhabditis elegans</li><li>Tetraodon</li><li>Makobe Island cichlid</li><li>Platyfish</li><li>Shrew mouse</li><li>Chinese hamster CriGri</li><li>Long-tailed chinchilla</li><li>Hyrax</li><li>Mouse BALB/cJ</li><li>Naked mole-rat female</li><li>Ruff</li><li>Vervet-AGM</li><li>Goat</li><li>Bushbaby</li><li>Coelacanth</li><li>Pink-footed goose</li><li>Macaque</li><li>Marmoset</li><li>Turbot</li><li>Periophthalmus magnuspinnatus</li><li>Chinese softshell turtle</li><li>Leopard</li><li>Degu</li><li>Climbing perch</li><li>Tongue sole</li><li>Mainland tiger snake</li><li>Mouse CBA/J</li><li>Tilapia</li><li>Gelada</li><li>Prairie vole</li><li>Fugu</li><li>Australian saltwater crocodile</li><li>Rabbit</li><li>Wild yak</li><li>Red fox</li><li>Bicolor damselfish</li><li>Shrew</li><li>Mouse AKR/J</li><li>Greater amberjack</li><li>Chicken</li><li>Mouse NOD/ShiLtJ</li><li>Painted turtle</li><li>Olive baboon</li><li>Alpine marmot</li><li>Orangutan</li><li>Asian bonytongue</li><li>Squirrel</li><li>C.savignyi</li><li>Golden snub-nosed monkey</li><li>Northern pike</li><li>Turkey</li><li>Mouse LP/J</li><li>Damara mole rat</li><li>Tiger</li><li>Yellowtail amberjack</li><li>Ocean sunfish</li><li>American black bear</li><li>Tree Shrew</li><li>Opossum</li><li>Rat</li><li>Mouse 129S1/SvImJ</li><li>Human</li><li>Microbat</li>
+                </body>
+                </html>"
+
    * http://localhost:8000/listSpecies?limit=a
+
      Response: Same as above, if you enter an incorrect limit the program acts as without a limit.
+
    * http://localhost:8000/karyotype?specie=human
-     Response: HTML File with the following content--
-"The names of the chromosomes are :
-1
-2
-3
-4
-5
-6
-... (list of all the chromosomes found in a human)"
+
+"<!DOCTYPE html>
+                                <html lang="en">
+                                <head>
+                                    <meta charset="UTF-8">
+                                    <title>KARYOTYPE OF A SPECIFIC SPECIES</title>
+                                </head>
+                                <body style="background-color: lightblue;">
+                                <body>
+                                   The names of the chromosomes are : <br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>X<br>Y<br>MT
+                                </body>
+                                </html>"
+
     * http://localhost:8000/karyotype?specie=cat
-      Response: HTML File with the following content--
-"The names of the chromosomes are :
-A1
-A2
-A3
-B1
-B2
-B3
-B4
-C1
-... (list of all the chromosomes found in a cat)"
+
+" <!DOCTYPE html>
+                                <html lang="en">
+                                <head>
+                                    <meta charset="UTF-8">
+                                    <title>KARYOTYPE OF A SPECIFIC SPECIES</title>
+                                </head>
+                                <body style="background-color: lightblue;">
+                                <body>
+                                   The names of the chromosomes are : <br>A1<br>A2<br>A3<br>B1<br>B2<br>B3<br>B4<br>C1<br>C2<br>D1<br>D2<br>D3<br>D4<br>E1<br>E2<br>E3<br>F1<br>F2<br>X<br>MT
+                                </body>
+                                </html>"
+
     * http://localhost:8000/chromosomeLength?specie=human&chromo=MT
-      Response: HTML file with the following content--
-"The length of the chromosome is : 16569"
+
+"<!DOCTYPE html>
+                                                    <html lang="en">
+                                                    <head>
+                                                        <meta charset="UTF-8">
+                                                        <title>LENGTH OF THE SELECTED CHROMOSOME</title>
+                                                    </head>
+                                                    <body style="background-color: lightblue;">
+                                                    <body>
+                                                       The length of the chromosome is :  16569
+                                                    </body>
+                                                    </html>"
+
     * http://localhost:8000/chromosomeLength?specie=mouse&chromo=18
-      Response: HTML file with the following content--
-"The length of the chromosome is : 90702639"
+
+"<!DOCTYPE html>
+                                                    <html lang="en">
+                                                    <head>
+                                                        <meta charset="UTF-8">
+                                                        <title>LENGTH OF THE SELECTED CHROMOSOME</title>
+                                                    </head>
+                                                    <body style="background-color: lightblue;">
+                                                    <body>
+                                                       The length of the chromosome is :  90702639
+                                                    </body>
+                                                    </html>"
+
     * http://localhost:8000/karyotype?specie=fddf
-      Response: Data Error HTML file with the following content--
-"ERROR
 
-Welcome to the DATA ERROR server
+"<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title> DATA ERROR</title>
+  </head>
+  <body style="background-color: red;">
+    <h1>ERROR</h1>
+    <p>Welcome to the  DATA ERROR server</p>
+    <p>If you are here is because the data you have entered does not exist in the ensembl</p>
+    <p>Sorry!!!</p>
+  </body>
+</html>"
 
-If you are here is because the data you have entered does not exist in the ensembl
-
-Sorry!!!"
      * http://localhost:8000/karyot
-       Response: URL Error HTML file with the following content--
-"ERROR
 
-Welcome to the ERROR server
+"<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title> ERROR Server</title>
+  </head>
+  <body style="background-color: red;">
+    <h1>ERROR</h1>
+    <p>Welcome to the ERROR server</p>
+    <p>If you are here is because the url that you have entered does not exist</p>
+    <p>Sorry!!!</p>
+  </body>
+</html>"
 
-If you are here is because the url that you have entered does not exist
-
-Sorry!!!"
      * http://localhost:8000/chromosomeLength?&chromo=18
-       Response: Parameter Error HTML file with the following content--
-"ERROR
 
-Welcome to the PARAMETER'S ERROR server
-
-If you are here is because the service you have selected needs some parameter that you did not specify
-
-Sorry!!!"
+"<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title> ERROR Server</title>
+  </head>
+  <body style="background-color: red;">
+    <h1>ERROR</h1>
+    <p>Welcome to the PARAMETER'S ERROR server</p>
+    <p>If you are here is because the service you have selected needs some parameter that you did not specify</p>
+    <p>Sorry!!!</p>
+  </body>
+</html>"
